@@ -13,14 +13,14 @@ def dichotomy(f, a, b, eps):
             v += 2
             a = x1
             b = x2
-            list.append({a, b})
+            list.append((a, b))
             continue
         if f(x1) > f(x2):
             a = x1
         else:
             b = x2
         v += 2
-        list.append({a, b})
+        list.append((a, b))
     return (a + b) / 2, count, v, list
 
 
