@@ -11,7 +11,7 @@ def gold_section(f, a, b, eps):
     y1 = f(x1)
     y2 = f(x2)
     v += 2
-    list.append({a, b})
+    list.append((a, b))
     while abs(b - a) > eps:
         count += 1
         if y1 < y2:
@@ -20,14 +20,14 @@ def gold_section(f, a, b, eps):
             x1 = a + const * (b - a)
             y1 = f(x1)
             v += 1
-            list.append({a, b})
+            list.append((a, b))
         else:
             a = x1
             x1, y1 = x2, y2
             x2 = b - const * (b - a)
             y2 = f(x2)
             v += 1
-            list.append({a, b})
+            list.append((a, b))
     return (x1 + x2) / 2, count, v, list
 
 
