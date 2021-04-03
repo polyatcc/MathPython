@@ -1,63 +1,29 @@
 import math
 
 
-def midPoint (f, x1, x2, y1, y2):
-    while True:
-        x = (x1 + x2) / 2
-        y = f(x)
-        if y <= y1 and y <= y2:
-            return (x, y)
-        elif y > y1:
-            x2 = x
-            y2 = y
-        elif y > y2:
-            x1 = x
-            y1 = y
+def f(x):
+    return math.log(x) * math.sin(x) * x ** 2
 
 
-def parabolic(f, a, b, eps):
-    list = []
-    count = 0
-    v = 0
-    y1 = f(a)
-    y2 = f(b)
-    x, y = midPoint(f, a, b, y1, y2)
-    ex = 0
-    now = 1
-    while abs(now - ex) > eps:
-        ex = now
-        nowX = 0.5 * (a + x - ((y - y1) * (b - x) / (x - a) / ((y2 - y1) / (b - a) - (y - y1) / (x - a))))
-        nowY = f(nowX)
-        if x < nowX:
-            if y < nowY:
-                b = nowX
-                y2 = nowY
-            else:
-                a = x
-                y1 = y
-                x = nowX
-                y = nowY
+def parabolic(f, a, b, eps=0.000001):
+    cnt = 0
+    x1, x2, x3 = a, (a + b) / 2, b
+    y1, y2, y3 = f(x1), f(x2), f(x3)
+    while x3 - x1 >= eps:
+        cnt += 1
+        u = x2 - ((((x2 - x1) ** 2) * (y2 - y3) - ((x2 - x3) ** 2) * (y2 - y1))
+                  / (2 * ((x2 - x1) * (y2 - y3) - (x2 - x3) * (y2 - y1))))
+        fu = f(u)
+        if u < x2:
+            u, x2 = x2, u
+            y2, fu = fu, y2
+        if y2 <= fu:
+            x3, y3 = u, fu
         else:
-            if nowY < y:
-                b = x
-                y2 = y
-                x = nowX
-                y = nowY
-            else:
-                a = nowX
-                y1 = nowY
-    return (a + b) / 2, count, v, list
+            x1 = x2
+            y1 = y2
+            x2 = u
+            y2 = fu
 
-
-def a(x):
-    return math.log(x, 10) * math.sin(x) * x ** 2
-
-
-i = 0.000001
-'''
-for j in range(9):
-    print(i)
-    print(dichotomy(a, 0, 1, i))
-    i /= 10
-'''
-print(parabolic(a, 0.000000001, 1, i))
+    x_min, f_min = x1, f(x1)
+    return x_min, f_min, cnt
